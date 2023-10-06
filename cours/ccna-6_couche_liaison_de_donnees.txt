@@ -1,0 +1,65 @@
+----------
+6.1
+----------
+-La couche liaison de données prépare les données du réseau pour le réseau physique.
+
+-la couche liason de donnees se compose de deux sous-couche:
+    ~Sous-couche LLC (Logical Link Control){IEEE 802.2}: -communique entre les logiciel reseau des couches supérieures et le matériel des couches inférieures.
+                                                         -indique le protocol reseau utilise en placeant ces infos dans la trame.
+    
+    ~Contrôle d'accès au support (MAC){IEEE 802.3, 802.11 ou 802.15}: -encapsulation et control d'acces au support. ---->[-1-la délimitation des trames  -2-adressage  -3-la détection des erreurs]
+                                                                      -fournit l'adressage de couche de liaison de données.
+
+-les org qui sont responsable sur les couches physique et liaison de donnees:
+     ~IEEE 
+     ~Union Internationale des Télécommunications (UIT)
+     ~ISO 
+     ~ANSI (American National Standards Institute)
+
+
+
+---------
+6.2
+--------
+
+-topologie d'un reseau se compose de deux types:
+     ~Topologie physique:  Identifie les connexions physiques et la façon dont les périphériques finaux
+       et les périphériques d'infrastructure sont interconnectés.[inclut l'emplacement physique de l'appareil].
+     
+     ~La topologie logique: Se réfère à la façon dont un réseau transfère des trames d'un nœud 
+       à l'autre.[inclut les cnxn viruelle des interfaces comme @IP et @MAC].
+
+-Les reseaux WAN peuvent inclure des topologie point a point, maille, etoile.
+
+-methode de controle d'acces:
+     ~acces avec gestion de conflit: utilise dans les reseau a noeud semi-duplexe(un seul appareil peut envoyer a la fois)                                  
+       pour gerer l'acces au support(BUS / CONCENTRATEUR(HUB)) [CSMA/CD - CSMA/CA].
+     
+     ~acces controle:chaque noeud utilise le support a tour de role(token-ring / arcnet) [inefficace et lent].
+
+
+
+-----
+6.3
+-----
+
+-les composant d'une trame:
+   ~en-tete:
+	    -debut de trame
+            -adressage
+            -type(id. du protocol de couche sup)
+            -controle(id. de service de controle de flux)
+
+   ~donnees
+
+   ~queu de bande:
+            -detection des erreurs
+            -fin de trame	
+
+-les @MAC sont utiliser uniquement pour l'acheminement local(LAN)
+
+-LES PROTOCOLE DE COUCHE 2 DEPEND DE:
+            ~la topologie logique
+            ~le support physique
+
+

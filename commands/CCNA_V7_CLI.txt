@@ -1,0 +1,178 @@
+listes de commandes CCNA_V7:
+
+===============
+config de base:
+===============
+
+   R(config)#hostname nom   		    	------->[definit le nom du peripherique]
+   R(config)#username nom-user password mdp 	------->[cree un utilisateur avec son mdp]
+   R(config-if)#description infos           	------->[decrit ou nomme une interface < 240-char]
+
+
+
+-------------------
+assignation d'@IP:
+-------------------
+   R(config)#interface fa 0/1			------>[selection de l'interface a configurer]
+   
+   ~IPv4:
+   R(config-if)#ip address x.x.x.x m.m.m.m	------>[assignation d'une @IPv4 (x= adress IPv4)(m= masque sous-reseau)]
+   
+   ~IPv6:
+   R(Config-if)#ipv6 address X:X:X:X::X/p   		------>[assignation d'une @IPv6 GUA (X= adress IPv6)(p= langueur du prefixe)]
+   R(Config-if)#ipv6 address N:N:N:N::/64 eui-64 	------>[assignation dynamique d'adresse IP avec le eui] 
+   R(Config-if)#ipv6 address X:X:X:X::X link-local 	------>[assignation d'une @IPv6 LLA  ( // )  ]
+   
+   R(Config-if)#ipv6 enable	 	------>[assignation automatique d'adresse IP] 
+   R(config-if)#ipv6 address autoconfig
+
+   R(config-if)#no ip domain look-up	------>[disable dns lookup]	
+
+   R(config-if)#no shutdown		------>[active l'interface]
+
+
+----------------------
+decrir une interface:
+----------------------
+   R(config-if)#description [description (no brackets)] 
+
+
+
+
+---------------------------------------------
+securisation du mode d'execution privelegie: 
+---------------------------------------------
+   R(config)#enable password mdp 	  ------->[securise le mode d'execution privlegie]
+   R(config)#enable secret mdp   	  ------->[   //        //       //        //    et crypte le mdp pour qu'il ne s'affiche pas dans les fichers de configuration]
+   R(config)#service password-encryption  ------->[crypte les mdp qui sont deja en text claire (ne s'applique pas aux secret)]  
+
+
+
+--------------------------------------------------------------------------------------------
+securisation d'une line/interface (demande le mdp avant l'utilisation d'une interface/line):
+--------------------------------------------------------------------------------------------
+
+   R(config)#line console 0    ------->[choisir la ligne console pour la configurer]
+   R(config-line)#password mdp ------->[securise le mode d'execution utilisateur]
+   R(config-line)#secret mdp   ------->[    //       //      //          //      et crypte le mdp pour qu'il ne s'affiche pas dans les fichiers de configuration]
+   R(config-line)#login        ------->[rend la saisie du mdp obligatoire qd on se connecte avec un cable console]
+   R(config-line)#login local  ------->[rend la conexion avec un username et un password obligatoire]
+
+
+------------------------------
+sauvegarde des modifications:
+------------------------------
+   R#write
+   R#copy running-config startup-config
+
+
+=============================================================================================================================================================
+
+
+==================
+configuration SSH
+==================
+-telnet/ssh (ces deux methodes utilisent les line virtuelle VTY) :
+
+   1-config nom de domaine IP:
+   R(config)#ip domain name span.com
+
+   2-creer cle de chiffrage du traffic SSH:
+   R(config)#crypto key generate rsa general-keys modulus {taille de la cle (bits)}
+
+   3-creer une entree dans la BDD:
+   R(config)#username iheb secret cisco
+
+   4-authentification par rapport a la BDD:
+   R(config)#line vty 0 4
+   R(config-line)#login local
+
+   5-activer les communication SSH de la ligne vertulle VTY:
+   R(config-line)#transport input SSH
+   R(config-line)#exit
+
+   R(config)#line vty 0 4          	     ------>[selectioner les line vty de 0 a 4 pour leur appliquer les meme modifications]
+   R(config-line)#password mdp      	     ------>[cree un mdp sur les line]
+   R(config-line)#login          	     ------>[rend la saisie du mdp obligatoire qd on se connecte avec un cable console]
+   R(config-line)#transport input ssh telnet ------>[permission d'utiliser ssh/telnet pour la configuration du peripherique]
+
+
+
+=============================================================================================================================================================
+
+
+==========================
+configuration commutateur:
+==========================
+
+S# mdix auto                                ------->[active l'auto-mdix]
+S(config)#interface vlan1    		    ------->[coix de l'interface vituelle vlan 1]
+S(config-if)#ip address x.x.x.x m.m.m.m     ------->[assignation d'une @IPv4 a l'interface vituelle (SVI)]
+S(config)# ip default-gateway x.x.x.x       ------->[definit l'@IPv4 de la passerelle par defaut (x= adresse IP de la passerelle)]
+
+
+=============================================================================================================================================================
+
+
+================
+config routeur:
+================
+-R(config)#no ip directed-broadcasts     ------>[desactive les deffusion derigees]
+-R(config)#ipv6 unicast-routing          ------>[active le routage IPv6]
+-R#show cdp neighbors			 ------>(Cisco Discovery Protocole)[protocole cisco / fonctionne sur la couche2 / detecte les apparails cisco compatible / il partage des infos logicielles et matterielles avec les voisins]
+-R#{no} debug {all/ip icmp}		 ------>[active/desactive le mode debug]
+-R#undebug all
+
+
+=============================================================================================================================================================
+
+
+=========================
+securisation du routeur:
+=========================
+
+R(config)#login block-for {temps de bloquage apres echec} attempts {N tentatives} within {lapse de temps des tentatives} ---->[bloque l'acces au mode priveligie apres tentatives errones]
+R(config)#security passwords min-lenght    ---->{languer min du mdp}
+R(config)#exec-timeout {minute} {seconde}  ---->[deconnexion du mode privilegie apres un temp d'inactivite]
+
+
+=============================================================================================================================================================
+
+
+===============================
+verification de configuration:
+===============================
+  R#show interfaces             ------>[affiches des informations sur toutes les interfaces du peripherique (inclut les infos d'adressage IPv4)]
+
+  R#show ip interface brief     ------>[répertorie toutes les interfaces, leur adresse IPv4 et leur état actuel]
+  R#show ipv6 interface brief   ------>[   //       //           //         //    //   IPv6     //   //    //  ] 
+
+  R#show ip interface           ------>[Affiche les statistiques IPv4 des interfaces du routeur]
+  R#show ipv6 interface         ------>[Affiche les statistiques IPv6 des interfaces du routeur]
+
+  R#show ip route   		------>[affiche les entrees d'itineraire du routeur (table de routage)]
+  R#show ip arp          	------>[affiche la table ARP]
+
+  R#show control-plane host open-ports   ------>[affiche les port ouvert sur le routeur]
+  R(config)#no ip http server   ------>[ferme le port HTTP]
+  
+
+Router# show ip ports all
+Router# show control-plane host open-ports 
+
+=============================================================================================================================================================
+
+
+
+===============
+commandes CMD:
+===============
+
+C:\user>arp -a   		 ----->[affiche la table ARP]
+
+C:\user>netstat 		 ----->[lister les protocoles, adresse/numeros de ports locaux, adresse/numeros de ports etrangers ainsi que l'etat de la connexion ]
+       		                       [l'option {-n} est utilisee pour afficher les @IP et les numero de ports sous forme numerique]
+  
+C:\user>ipconfig /displaydns     ----->[affiche toutes les entrees DNS mises en cache.]
+
+C:\user>arp –d *		 ----->[supprime le cache ARP]

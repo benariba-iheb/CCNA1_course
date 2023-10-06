@@ -1,0 +1,44 @@
+------
+13.1
+------
+
+-les messages ICMP ont pour but de fournir des commentaires sur les problemes lies au traitement de paquets IP.
+    ~ICMP ne sont pas obligatoire et peuvent etre interdit sur un reseau pour des raisons de securite.
+
+-les types de mesages ICMP:
+    ~accessiblite de l'hote(utilise par [ping]): le 1er hote envoie une demande d'echo, et l'autre hote repond(s'il est disponible) avec une reponse d'echo.
+    
+    ~destination ou service inaccessible: lorsq'un peripherique ne peut pas acheminer un paquet recue, il utilise l'ICMP pour avertire la source.
+        (comprend un code indiquant pourquoi le paquet n'a pas pu être acheminé.)
+
+    ~delai depasse: utilise par un routeur pour indiquer qu'il a abondonne le paquet car le TTL/hop-limit a atteint 0 (utilise par [tracert]).
+
+
+les codes de distination inaccessible ICMPv4:
+    ~0: reseau inaccessible.
+    ~1: hote inaccessible.
+    ~2: prorocole inaccessible.
+    ~3: port inaccessible.
+
+-les codes de distination inaccessible ICMPv6:
+    ~0: pas de route vers la destination. 
+    ~1: la communication avec la destination est interdite administrativement(pare-feu,....)
+    ~2: hors-portee de l'adresse source.
+    ~3: adresse inaccessible.
+    ~4: port inaccessible.
+	
+-ICMPv6 offre 4 protocole dans le cadre du protocole NDP:
+    ~solicitation du routeur.
+    ~annonce du routeur.
+    ~solicitation du voisin. (les messages entre voisin gere la detection d'adresse double et la resolution d'adresse).
+    ~annonce du voisin.
+
+-une reponse de l'adresse de bouclage signifie que le protocole internet est correctement installe(n'indique pas que le masque, la passerelle sont correctement configures).
+
+-si l'interface du routeur(passerelle) ne repond pas:
+    ~une adresse de passerelle incorrecte a ete configurer sur l'hote.
+    ~une regle de securite qui empeche le routeur de traiter des requetes ping.
+
+-tracert est un utilitaire qui genere une liste des sauts qui ont ete atteint avec succes le long du chemin ainsi que des informations(listes des interfaces des routeurs intermediaire, durre de trajet aller-retour(RTT) ) pour la verification et le depannage.
+
+-tracert utilise le TTL pour recevoire des informations sur chauque peripherique intermediaire(incremente le TTL a chaque fois qu'il recoit un message de delai depasse).

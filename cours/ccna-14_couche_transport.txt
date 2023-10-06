@@ -1,0 +1,275 @@
+-----
+14.1
+-----
+
+-la couche application fait circuler les donnees par le biais des peripherique reseau.
+
+-la couche de transport comprend deux protocoles:
+    ~TCP(transmission control protocole)
+    ~UDP(user datagram protocole)
+
+-les responsabilitees de la couche transport:
+    ~suivi des conversations individuelles: la couche transport est chargee de garantir de multiples conversations et d'en effectuer le suivi.
+       (conversation = donnees circulant d'une app source a une app destination) 
+
+    ~segmentation des donnees et reconstitution des segments: la couche transport est responsable sur la division des donnees d'application en blocs de taille appropriee.
+       (les donnees sont devisees en segment ou en datagramme)
+
+    ~ajouter des informations d'en-tete: des informations d'en-tete organisees en plsr champs sont ajoutees a chaque bloc de donnees 
+       (dans le but de reassembler les blocs de donnees par le recepteur)  
+
+    ~identification des applications: la couche transport attribut a chaque application cible un numero de port pour l'identification.
+       (pour gerer plusieurs communications ayant des exigence differentes en matiere de transport)
+
+    ~multiplexage de conversations: permet a plsr application de communiquer en meme temps et permet a differentes conversation d'etre entrelacees sur le meme reseau.
+
+
+
+-la protocoles de couche transport aident a(des applications differentes ont des exigence de fiabilites differentes): 
+    ~specifier comment transferer des msg entre les  hotes. 
+    ~la gestion des exigence de fiabilite d'une conversation.
+    
+-le protocole TCP est un protocole couche transport:
+    ~fiable et complet. 
+    ~garantit que toutes les donnees arrivent a la destination.
+    ~inclut des champs assurant la livraison de donnees de l'application(necessite un traitement supplemantaire par les hotes).
+
+-TCP assurent la fiabilite et le controle de flux en utilisant les operations suivantes:
+    ~numeroter et suivre les segments transmis a un hote a partir d'une application.
+    ~accuser la reception des donnees recues.
+    ~retransmettre toutes les donnees nn reconnues apres un certain temps.
+    ~sequencer les donnees qui peuvent arriver dans un ordre incorrecte.
+    ~envoyer les donnees en un teaux efficace et acceptable par le destinataire.
+
+-avant de maintenir une conversation le protocole TCP doit d'abord etablir une connexion entre l'expiditeur et le recepteur(oriente connexion).
+
+-le protocole UDP(protocole sans etat) est moins fiable et ne controle pas le flux de conversation mais il est plus leger et est plus rapide.
+    ~l'UDP est un protocole meilleur effort(car il n'y a pas d'accuse de reception).
+
+-differance entre TCP et UDP:
+    
+                 		TCP:						|				 UDP:
+      	  									|		
+	  ~fiable								|		      ~rapide
+    	  ~accuse de reception des donnees					|		      ~faible surcharge                                                                                                                                           
+	  ~renvoie des donnees perdues						|		      ~pas d'accuse de reception
+	  ~envoi des donnees en ordre sequentiel				|	              ~pas de renvoie de donnees perdues
+										|	              ~envoie de donnees en mesure de leur arrivee
+										|
+
+
+------
+14.2
+------
+
+-le prtotocole TCP fournit les services suivants:
+    ~etablit une session:     TCP etablit une connexion(session) permanante avant d'acheminer tout traffic(negocie la qtt de traffic).
+    ~garantie la livraison des donnees. 
+    ~fournit la livraison dans le meme ordre.
+    ~soutien le controle des flux:   le TCP determine si l'hote est surexploite et ajuste le flux accordement(le controle de flux rend inutile la retransmission des donnees qd l'hote de reception est sature).
+ 
+-l'en-tete TCP:(20 octets (+4 opt) )
+[ { port source(16-bits) } __ { port destination(16-bits) } __ { numero de sequence(32-bits) } __ { numero d'accuse de recption(32-bits) } __ { langueur d'en tete(4-bits) } __ { reserve(6-bits) }  __ { bits de controle(6-bits) } __ { fenetre(16-bits) } __ { somme de controle(16-bits) } __ { urgent(16-bits) } __ { options(0/32-bits) } __ { donnees application(taille variable) } ] 
+ 
+    ~num port src/dst: identifie l'application source par un numero de port.
+    ~num d'ordre: utilise pour le reassemblage des segments.
+    ~num d'accuse de reception: indique la reception de donnees et indique l'ID du prochaine octet attendu.
+    ~langueur d'en-tete.
+    ~reserve: reserve pour une utilisation future.
+    ~bits de controle: inclut des codes de bits, des indicateurs pour indiquer l'objectif du segment.
+    ~taille de fenetre: indique le nombre d'octets pouvant etre acceptees a la fois.
+    ~somme de controle: verification d'erreurs dans l'en-tete.
+    ~urgent: indique que les donnees contenues sont urgents.
+
+
+------
+14.3
+------
+
+-si la fiabilite est necessaire en utilisant l'UDP elle doit etre prise en charge par l'application.
+
+-l'en-tete UDP:(8octets)
+[ { port source(16-bits) } __ {port destination(16-bits) } __ { longueur(16-bits) } __ { somme de controle(16-bits) } __ { donnees de couche sup(taille variable) } ]
+    ~meme fonction que les champs du protocole TCP.
+
+-les types d'application adaptes a l'UDP:
+
+    ~application video multimedia direct: tolere une petite perte de donnees mais pas de delai (VoIP).
+
+    ~applications simples de demande et de reponse: application avec transactions simple ou on peut recevoire une reponse ou non (DNS/DHCP).
+
+    ~application qui gerent elle-meme la fiabilite: pour une communication unidirectionelle qui n'a pas besoin de controle de flux, detection d'erreurs, accusees de reception (SNMP/TFTP).
+
+
+-certains protocoles peuvent utiliser les deux protocole de la couche transport:
+    ~le DNS utiliserra le TCP si la reponse est superieur a 512-octets.
+    ~si l'admin-reseau configure le SNMP a utiliser le TCP.
+
+
+------
+14.4
+------
+
+-les protocoles de couches transport utilisent les numeros de ports pour gerer plsr conversations.
+
+-qd un hote initie une conversation avec un serveur l'hote lance une demande avec un numero de port source genere dynamiquement(pour identifier de maniere unique la conversation).
+   ~ce qui segnifie que le port de destination est celui qui vat identifier le type de service demande.
+
+les cobinaisons @IP-src/port-src et @IP-des/port-dest sont appele interface de connexion.
+   ~l'interface de connexion sert a identifier le serveur et le service demande 
+   ~interface de connexion d'un client: 192.168.1.5:1099 [@IP:port-src]
+   ~interface de connexion d'un serveur: 8.8.8.8:80 
+ces deux interfaces de connexions sont appele une paire 'interfaces de connexion.
+
+-l'IANA est responsable de l'assignation des des numeros de ports.
+
+-les types de numeros de ports:
+    ~ports connues [0 - 1023 ]: services et applications communs.
+    ~ports inscrits [1024 - 49151]: assignes par l'IANA par requete de processus.
+    ~ports dynamiques/prives [49152 - 65535 ]: identifie un client dans une connexeion.
+
+ports communs:
+ -TCP:
+   ~ftp(Data):               		20
+   ~ftp(controle):           		21
+
+   ~SSH:                    		22
+   ~telnet:                  		23
+
+   ~SMTP:                    		25
+
+   ~http:                    		80
+
+   ~POP3(post office protocole):        110
+   ~IMAP:                               143
+
+   ~HTTPS:                              443
+
+
+ -UDP/TCP:  
+   ~DNS:                                53
+
+
+ -UDP:
+   ~DHCP(serveur): 				67
+   ~DHCP(client): 				68
+   ~TFTP: 					69
+   ~SNMP: 					161
+
+
+------
+14.5
+------
+
+-etablissement d'une connexion TCP avec les 3messages(poigne de main a trois voies):
+    ~SYN: le client demande d'etablir une connexion avec le serveur 
+          (contient le numero de sequence du client)
+
+    ~SYN/ACK: le serveur renvoie un accuse de reception au client
+          (contient un numero de sequence du serveur avec [un accuse de reception = num de sequence client + 1] ).
+ 
+    ~ACK: le client accuse reception de la session de communication
+          ( contient [numerode sequence = accuse de reception recue du serveur] et [accuse de reception = numero de sequence serveur + 1] ) 
+
+interruption de session TCP(l'indicateur de controle [FIN] doit etre definie dans l'en-tete): 
+    ~FIN(client): qd le client n'a plus de donnees a envoyer dans le flux.
+
+    ~ACK(serveur): le serveur renvoie un ACK pour mettre fin a la session du client au serveur.
+
+    ~FIN(serveur): le serveur envoie un segment FIN pour mettre fin a la session serveur au client.
+
+    ~ACK(client): le client envoie un ACK pour accuser reception du segment FIN et terminer la conversation.
+
+pour mettre fin a une seul conversation TCP: 4 echanges sont necessaire pour mettre fin aux deux sessions.
+
+-les fonctions du 3-way-handshake:
+    ~il verifie la presence de la destination dans le reseau.
+    ~il s'assure que la destination est actif et accepte les requetes sur le numero de port specifie pa le client.
+    ~il informe la destination que le peripherique source veut etablir une conversation sur ce port.
+
+-le champ bit de controle est un indicateur(actif/inactif):
+    ~FIN: utilisees pour terminer une session.
+    ~ACK: accuse de reception utilise dans l'etablissement et la terminaison d'une session.
+    ~SYN: synchronisation des numeros de sequence utilise dans l'etablissement de la session. 
+    ~URG: champ de pointeur urgent significatif.
+    ~PSH: fct push.
+    ~RST:renitialisation de communication en cas d'erreur ou de depassement de delai.
+
+------
+14.6
+------
+
+-le TCP numerote tous les paquets envoyer dans une session a l'aide d'un numero d'ordre initial(ISN).
+
+    ~represente la valeur de depart des octets de la session transmise a l'application.
+        (ne commence pas par 1 a cause de qlq cyber-attaque)
+
+    ~lors de chaque transmission, il est incremente du nombre d'octets ayant ete transmis.
+
+    ~il aide a reassembler les segment recues.
+        (TCP place les segment dans une memoire tompon de reception pour ensuite les placer dans l'ordre)
+
+
+    
+-l'ISN permet d'accuse reception et d'identifier chaque segment.
+
+
+-un accuse de reception previsionnel utilise le numero d'ordre(SEQ) et le numero d'accuse de reception(ACK) ensemble ou le SEQ identifie le premier octet de donnees du segment 
+    et le numero ACK renvoye indque l'octet suivant attendue.
+
+
+-les systemes d'exploitation modernes negocierront le support de la fonctionalite TCP appele (SACK) dans la poigne de mains a trois voies.
+
+
+-les peripherique utilisant SACK savent reconnaitre les segments manquants dans une conversation et renvoi au recepteur un ACK avec le dernier segment non corrampue + 1 (le segment attendue du recepteur)
+     et un SACK avec l'intervalle suivante des SEQ des segments bien recues.
+
+
+
+-le champ taille de fenetre aide a controle le flux de communication entre les deux hotes.
+    ~c le nombre d'octets qu'un peripherique destination peut accepter et traiter a la fois.
+
+    ~il represente le dernier octets que l'expediteur peut envoyer sans recevoire d'accuse de reception.
+
+    ~il est determine lors de l'etablissement de la session TCP.
+    
+    ~apres avoire recues un accuse de reception ACK(numero seq du dernier octet recue) de la destination,
+           la source vat incrementee la fenetre d'envoie en ajoutant la valeur de sequence du dernier segment confirme a la fentre d'envoie.
+    ~il depend de la memoire tompon de la destination.
+
+
+
+-protocole de fenetre coulissante est utilise par les systemes modernes pour permettre un envoie continue de segment par l'expediteur.
+
+
+
+-la taille maximale d'un segment(MSS) est definie dans le champ d'option.
+    ~elle specifie la plus grande quantites de donnees(octets) qu'un peripherique peut recevoire dans un segment.
+
+    ~il est generalement inclut dans la poigne de main a trois voies.
+
+    ~la MSS definie la taille maximale des donnees utiles tandis que le MTU definit la taille maximale de tout la trame.
+
+    ~la MTU par defaut est 1500 donc si on retranche l'en-tete IPv4(20-oct) et l'en-tete TCP(20-oct) ===> la MSS par defaut = 1460-oct.
+
+
+
+-la source peut estime le niveau d'encombrement du reseau en determinant la vitesse a laquelle les segment sont envoyes mais non recues.
+    ~si la retransmission des segment n'est pas controle, elle pourra cause plus d'encombrement.
+
+
+-TCP utilise divers mecanismes, muniteurs et algos de gestion des encombrement.
+    ~si la source remarque que les segment n'ont pas ete recue, elle peut diminuer le nombre d'octets a envoyer avant de recevoire un accuse de reception.
+
+
+-     !!!! les numeros d'accuse de reception se referent a l'octet suivant attendu et non a un segment. !!!!
+
+-la source controle le nombre d'octets a envoyer(flux) et la destination determine la taille de la fenetre.
+
+
+
+------
+14.7
+------
+
+-le protocole UDP ne peut pas reorganiser les datagrammes recues et ce contente de les reassembler et de les passer a la couche application.

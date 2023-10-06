@@ -1,0 +1,113 @@
+---------
+11.1
+---------
+-une adresse IPv4 est une adresse hierarchique de 32-bits.
+
+-le processus utilisé pour identifier la partie réseau et la partie hôte est appelé l'opération AND.
+
+-La longueur du préfixe est le nombre de bits mis à 1 dans le masque de sous-réseau. 
+
+
+-------
+11.2
+-------
+
+-une diffusion dirigée par IP transfère des paquets IP monodiffusion destinés à un hôte sur ce réseau. Lorsqu'un paquet de diffusion dirigée 
+    atteint un routeur directement connecté au réseau de destination, ce paquet est diffusé sur le réseau de destination.
+       ~en raison de problemes d'abus et de securite les deffusion dirige sont desactivees  par defaut a partir de l'IOS cisco avec la commande: 
+        [R(config)#no ip directed-broadcasts]
+
+-les clients multidiffusion sont les hotes qui recoivent des paquets multicast.
+    (ils font appel a des services demandes par un programme client pour s'abonner au groupe multidiffusion).
+
+-chaque groupe multi diffusion est represente par une seul adresse multidiffusion. un hote a aussi une adresse monodiffusion a lui seul.
+    
+-les protocoles de routage utilisent des transmissions multidiffusion.
+    (l'adresse monodiffusion du protocole OSPF est:224.0.0.5)
+
+
+--------
+11.3
+--------
+-la plage des adresses prives:
+    ~ 10.0.0.1 <-----> 10.255.255.255  (/8)
+    ~ 172.16.0.0 <-----> 172.31.255.255  (/12)
+    ~ 192.168.0.0 <-----> 192.168.255.255  (/16)
+
+-Les adresses privées sont définies dans RFC 1918 et parfois appelées espace d'adressage RFC 1918.
+
+-Avant que le FAI(ISP) puisse transférer un paquet, il doit traduire l'adresse IPv4-src(privée), vers une adresse IPv4 publique à l'aide de la traduction d'adresses réseau (NAT).
+
+-IETF ne considère pas les adresses IPv4 privées ou NAT comme des mesures de sécurité efficaces.
+
+-la zone demilitarisee(DMZ) est la partie du reseau ou il y a des peripheriques dotes d'adresses IPv4 publique.
+
+-les adresses de bouclage sont des adresses spéciales utilisées par un hôte pour diriger le trafic vers lui-même.
+
+-les adresses local link/automatic private IP adressing(APIPA) [169.254.0.0/16] sont utilisés par un client DHCP Windows pour auto-configurer dans le cas où aucun serveur DHCP n'est disponible.
+
+-l'adressage de classe est défini dans la RFC 790:
+      ~[classe-A(0.0.0.0/8 -- 127.0.0.0/8) ]. 
+      ~[Classe-B (128.0.0.0/16 -- 191.255.0.0/16) ]. 
+      ~[Classe-C (192.0.0.0/24 -- 223.255.255.0/24) ].
+
+-classe-D(224.0.0.0 -- 239.255.255.255): est un bloc de multidiffusion.
+
+-classe-E(240.0.0.0 -- 255.0.0.0): classe d'adresses experimental.
+
+-l'adressage de classe a ete abondonne avec l'arrivee du WORLD WIDE WEB et la ma methode d'adressage sans classe a ete adopte a sa place.
+
+-Les adresses IPv4 et IPv6 sont gérées par l'IANA (Internet Assigned Numbers Authority).
+
+   ~IANA gere les bloc d'@IP et les attribue aux organismes d'enregistrement internet locaux(RIR).
+   ~les RIR(regional internet registers) sont charges d'attribuer des adresses IP a des ISP 
+   ~les ISP fournissent des blocs d'@ aux entreprise et aux ISP de petite envergure 
+
+-les organisation d'enregistrement internet locaux sont:
+                  ~ARIN: amerique du nord.
+                  ~RIPE-NCC: europe.
+ 		  ~APNIC: asie
+  		  ~AFRINIC: afrique
+                  ~LACNIC:amerique du sud.
+
+
+-------
+11.4
+-------
+
+-les commutateurs transmettent les message de deffusion donc ils appartiennent a un seul domaine de collision.
+
+-les routeurs ne transmettent pas les messages de deffusion donc chaque interface du routeur est connecte a un seul dommaine de colision.
+
+-le processus de creation de sous-reseau aide a reduire la taille d'un dommaine de deffusion.
+    (un grand dommaine peut impacte negativement les performance du reseau).
+
+-les trois types de sous-reseautage sont:
+    
+    ~sous-reseautage par lieu.
+    ~sous-reseautage par groupe ou fonction.
+    ~sous-reseautage par type d'appareil.
+
+
+------
+11.5
+------
+
+-la longueur du prefixe est la limite d'octet.
+
+
+-------
+11.9
+-------
+
+-attribution d'adresses:
+    ~Les clients d'utilisateurs finaux: on les attribue des adresse de maniere dynamique a l'aide du DHCP.
+   
+    ~Serveurs et périphériques:  Ils doivent avoir une adresse IP statique prévisible.
+    
+    ~Serveurs accessibles à partir d'Internet: ils ont des adresses IPv4 publique et accessible via NAT.
+	                                       (on peut utiliser un VPN pour acceder a un reseau interne prive via internet)
+
+    ~Les périphériques intermédiaires: Ces périphériques se voient attribuer des adresses pour la gestion, la surveillance et la sécurité du réseau.
+
+    ~passerelle:  Les routeurs et les pare-feu ont une adresse IP assignée à chaque interface qui sert de passerelle pour les hôtes de ce réseau.

@@ -1,0 +1,99 @@
+------
+16.1
+------
+
+-les intrus qui utilisent les faille logiciels ou exploitent les vulnirabilites du logiciels sont appeles acteurs de menace.
+
+
+-les types de menaces:
+    ~vol d'informations confidentiels.
+    ~perte et manipulation de donnees.
+    ~usurpation d'identite: vol d'identite.
+    ~iterruption de service: empeche les utilisateurs d'acceder aux services.
+
+
+-les types de vulnerabilites:
+
+    ~vulnerabilite technologique:-faiblesse des protocoles: qlq protocoles ne sont pas securises.
+    				 -faiblesse du systeme d'exploitation.
+				 -faiblesse des equipement reseau: mot de passe non protege, manque d'authetification, failles pare-feu.
+                                 
+    ~vulnirabilite de configuration:
+				 -compte utilisateur non securise.
+				 -compte systeme avec un mdp facile a craquer.
+				 -service internet mal configures:les navigateurs web utilisent le javascript qui permet d'activer des attauqes.
+				 -parametres logiciels par defaut non securises.
+				 -equipement reseau mal configure.
+
+    ~vulnerabilte de strategie:
+                                 -absence de strategie de securite ECRITE.
+				 -politique: les conflits entre les departement rendent difficle la mise en oeuvre d'une strategie de securite. 
+				 -manque de continuite de l'authentification
+				 -controle des acces logiques non applique
+				 -instalation de logicielles et de materils nn conformes a la strategie de securite.
+				 -absence d'un plan de reprise apres sinistre.
+
+
+
+-les menaces physique:
+     ~menace materielle: 
+     ~menace environnementale
+     ~menace electrique
+     ~menace liees a la maintenance
+
+
+
+-----
+16.2
+-----
+
+-types d'attaques:
+     ~attaque de reconnaissance:
+				-requetes internet.
+                                -balayages ping.
+ 				-balayages de ports.
+
+     ~attaque par acces:
+   				-attaque de mdp.
+				-exploitation de la confiance.
+  				-redirection de port. 
+				-l'homme du milieu.
+
+     ~attaque de service:
+				-DOS.
+
+     ~attaque par logiciels malveillant.
+
+
+
+------
+16.3
+------
+
+-service de securite:
+    ~VPN
+    ~pare-feu ASA:    garantit que le traffic interne peut sortir et revenir
+     mais le traffic externe ne peut pas etablir une connexion avec les hotes interne.
+    
+    ~IPS:    systeme de prevention d'intrusion. surveille le traffic et recherche des logiciels malveillants.
+
+    ~ESA/WSA:    l'appliance de securite de messagerie/web. filtre les SPAM et les E-mail/site suspect 
+
+    ~serveur AAA:    contient une BDD securisee qui authentifie et autorise l'acees au peripherique reseau.
+
+
+
+-les considerations relatives a la sauvegarde de donnees:
+    ~frequence:   la sauvegarde reguliere des donnees.
+    ~stockage:   validation des sauvegardes pour garantir l'integrite.
+    ~securite:   transporter les sauvegardes vers un endroit sure.
+    ~validation:    perotection des sauvegardes par un mdp fort.
+
+
+-le AAA(authentification - authorisation - accountig)/(authentification - authorisation - gestion de compte) est un moyen de controle d'acces a un reseau
+
+-types/techniques des pare-feu:
+    ~filtrage de paquets:   filtre selon @IP/@MAC.
+    ~filtrage des applications:   fltre selon l'application.
+    ~filtrage des URL:   filtre selon l'URL.
+    ~inspection minutieuse de paquets(SPI):   flitre selon la legitimite des reponses.

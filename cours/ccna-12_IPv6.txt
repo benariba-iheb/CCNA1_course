@@ -1,0 +1,125 @@
+------
+12.1
+------
+
+-le protocole ICMPv6 inclut  la configuration automatique et la résolution d'adresse, qui sont inexistant dans la version 4.
+
+- la fonction NAT endommage de nombreuses applications et comporte des restrictions qui gênent fortement les communications peer-to-peer.
+
+-la majoritee des grandes entreprises ont fait la transition vers l'IPv6.
+
+-l'IETF a cree divers technologie pour aider les admin-reseau a faire la transition vers IPv6:
+     ~double pile(double stack): les peripherique double pile executent les piles de protocoles IPv4 et IPv6 simultanement.
+             (aussi appele IPv6 natif) permet a un client de se disposer d'une connexion internet avec IPv6 via son FAI.
+     ~tunneling: consiste a transporter un paquet IPv6 sur un reseau IPv4 en encapsulant les paquets IPv6 en paquets IPv4 et de faire l'inverse de l'autre cote.
+     ~traduction: permet aux périphériques IPv6 de communiquer avec des périphériques IPv4 à l'aide d'une technique de traduction analogue à la NAT pour IPv4.
+
+-le tunneling et la traduction sont destines a faciliter la transition vers IPv6.
+
+
+------
+12.2
+------
+
+-le format d'une adresse IPv6: X:X:X:X:X:X:X:X (chaque X represente 4 caracteres heaxadecimale(16-bits) et est appele un hextet).
+
+simplification d'adresses IPv6:
+   ~ommetre les 0 en debut du segment.
+   ~double deux points.
+
+ 
+------
+12.3
+------
+
+-les types d'adresses IPv6 (l'IPv6 n'a pas d'adresses de diffusion):
+    ~monodiffusion: Une adresse de monodiffusion IPv6 identifie une interface sur un périphérique IPv6 de façon unique.
+    ~Multidiffusion: Une adresse de multidiffusion IPv6 est utilisée pour envoyer un seul paquet IPv6 vers plusieurs destinations.
+    ~Anycast: Une adresse anycast IPv6 est une adresse de monodiffusion IPv6 qui peut être attribuée à plusieurs périphériques.
+
+-le prefixe/partie reseau(IPv4) <==> la langueur du prefixe(IPv6). 
+
+-recommander pour la plupartie des reseaux est la langueur de prefixe /64 [ prefixe(64-bits) -- ID d'interface(64-bits) ] (2001:db8:a::/64)
+    prefixe <==> partie reseau    //     ID d'interface <==> partie hote
+
+-laconfiguration SLAAC utilise 64bits pour l'ID d'interface.
+
+-les types d'adresses monodiffusion:
+    ~mondiffusion globale.
+    ~link-local.
+    ~bouclage(::1/128). 
+    ~adresse non specifiee(::).
+    ~adresse local unique.
+
+-les peripherique IPv6 ont generalement deux adresses monodiffusion:
+    ~adresse GUA(global unicast address): similaire a une adresse IPv4 publique.
+    ~adresse LLA(local-link address): elle est utilise pour communiquer avec d'autre peripherique compatible IPv6(similaire a une adresse IPv4 prive).
+
+-les adresses locales uniques[ fc00::/7 < ULA < fdff::/7 ] ne sont pas encore implementees.
+    (utiliser pour  adresser des peripherique qui ne devrait pas etre accessible depuis l'exterieur).
+
+-les adresses de monodiffusion global(GUA) [ les premiers bits=001 ==> 2000::/3 ]
+
+-l'ICANN(internet comeittee for assigned names and numbers), operateur de l'IANA, attribue les blocs d'adresses IPv6 aux 5 RIR.
+
+- L'adresse 2001:0DB8::/32 a été réservée à des fins de documentation, notamment pour être utilisée dans des exemples.
+
+-la forme d'une @IPv6 GUA: [ prefixe de routage(48-bits) ==> ID de sous-reseau(16-bits) ==> ID d'interface(64-bits) ] 
+    ~prefixe de routage globale: c'est la partie reseau attribue a un client par un fournisseur(ie:un FAI). elle est GENERALEMENT de taille 48-bits. 
+         le prefixe varie selon la strategie du FAI. la taille du prefixe de routage determine la taille de l'ID de sous-reseau.
+   
+    ~ID de sous-reseau:  est utilisé par une entreprise pour identifier les sous-réseaux au sein de son site. Plus l'ID de sous-réseau est un nombre important.
+        plus il y a de sous-réseaux disponibles.
+    
+    ~ID d'interface: l'equivalent de la partie hote d'une adresse IPv4. une langueur de prefixe de 64-bits  laisse 64-bits pour l'ID d'interface ce qui est recommande
+                     pour permettre aux peripherique compatibles SLAAC  de creer leur propre ID d'interface.
+
+
+-dans l'IPv6 les adresse hote contenant seulement des 1 ou seulement des 0 peuvent etre attribues
+     (L'adresse contenant uniquement des 0 peut également être utilisée, mais elle est réservée comme adresse anycast de routeur de sous-réseau, et elle ne doit être attribuée qu'aux routeurs.)
+
+-les adresses LLA[ fe80::/10 ==> les dix premiers bits sont 1111111010 ==> < febf:ffff:ffff ].
+
+-utilisation des adresses LLA (ces adresses ne sont pas routable):
+    ~les routeur utilisent les adresses LLA des voisins pour envoyer des maj de routage.
+    ~les hotes utilisent l'@-LLA du routeur comme passerelle par defaut.
+
+-obtention d'une LLA:
+    ~statique: configuree manuellement.
+    ~dynamique: le peripherique cree son propre ID d'interface en utilisant le EUI(Extended Unique Identifier).
+
+------
+12.4
+------
+
+-une adresse IPv6 peut etre dynamiquement assigne a un peripherique a l'aide de (ces deux methode configure l'adresse du routeur link-locale comme passerelle):
+     ~SLAAC (configuration d'adresses automatique sans etat).
+     ~DHCPv6 avec etat.
+
+-la configuration manuelle d'une LLA peut aide a distinguer un peripherique  dans le reseau (ex: routeur).
+
+-une LLA est configure avec [ipv6 address X:X:X:X::X link-local]
+    ~lorsqu'une adresse commence par un hextet qui appartient a la plage des LLA, l'ajout du parametre [link-local] est obligatoire.
+    ~une LLA peut etre configure sur chaque lien tant qu'il est unique sur ce lien.
+
+
+------
+12.5
+------
+ 
+-les adresses GUA peut etre configure dynamiquement a l'aide des publicite de routeur(RA) et solicitation de routeur(RS) qui sont des messages ICMPv6.
+
+-Les routeurs IPv6 envoient des messages d'annonce de routeur ICMPv6 toutes les 200 secondes à tous les périphériques IPv6 du réseau.
+    ~Un message d'annonce de routeur est également envoyé en réponse à un hôte qui envoie un message de sollicitation de routeur ICMPv6(RA).
+
+-si la methode SLAAC est utilisee, les messages d'annonce de routeurs inclut: ~prefixe reseau. 
+                                                                              ~la langueur du prefixe.
+  									      ~les informations de passerelle.
+
+------
+12.7
+------
+-les adresses multidiffusions IPv6: (ff00::/8
+    ~multidiffusion a tous les noeuds(ff02::1).
+    ~multidiffusion a tous les routeurs(ff02::2).
+    ~multidiffusion de noeud solicite(ff02::1:ffXX:XXXX): utilise dans les solicitation de voisin et utilisee dans le protocole ARP[X:l'adresse link locale de la destination voulue]

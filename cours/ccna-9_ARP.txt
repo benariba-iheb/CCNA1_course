@@ -1,0 +1,79 @@
+-------
+9.2
+-------
+
+-le protocole ARP est utilise pour déterminer l'adresse MAC de destination d'un périphérique local lorsqu'il connaît son adresse IPv4.
+
+-le protocole ARP  assure:
+    ~la résolution des adresses IPv4 en adresses MAC.
+    ~Tenir à jour un tableau des mappages d'adresses IPv4 à MAC (cette map est appele table/cache ARP).
+
+-le peripherique utilisant ARP suit ces etapes:
+    ~verifie si l'@IPv4-dest apartient a son reseau locale sinn l'@MAC-dest serra l'@ de la passerelle.
+    ~si elle appartient au reseau le peripherique cherche dans sa table ARP l'@ MAC correspondante.
+
+-les messages requete-ARP sont encapsules directement dans une trame ethernet(ne contiennent pas d'em-tete IPv4).
+
+-les informations dans un paquet requete-ARP:
+    ~@MAC-dest: qui l'@MAC de diffusion car tout les peripherique du reseau doivent la traiter.
+    ~@MAC-src: l'@MAC de l'expediteur.
+    ~type(0x806): informe la carte receptrice qu'elle doit effectuer le processus ARP. 
+
+-la forme du message: {[@MAC-dest(deffusion)]-[@MAC-src]-[@IPv4-dest]-[@MAC-dest(inconnue)]}.
+
+-les requetes ARP:
+    ~ces requetes sont des deffusions.
+    ~elles sont traitees par le systeme d'exploitation.
+    ~chaque peripherique doit traiter la requete ARP pour voire si l'@IPv4 correspond a la sienne.
+    ~elles ne sont pas transmettees par les routeurs.
+
+-les informations dans un paquet reponse-ARP:
+    ~l'@MAC-dest: = l'@MAC de l'expediteur de la requete.
+    ~l'@MAC-src: = l'@MAC de l'expediteur de la reponse.
+    ~type.
+ 
+-Seul le périphérique à l'origine de la requête ARP reçoit la réponse ARP en monodiffusion.
+
+-une entree de la table ARP serra supprimee si le peripherique ne recoit pas une trame de cette entree(les entrees de la table ARP sont horodatees).
+    sur les systemes d'exploitation medernes les entrees sont stocker pendant (15s-45s). 
+
+-l'equivalant a ARP dans l'IPv6 est (detection de voisins ICMPv6). il utilise des messages de sollicitation et d'annonce.
+
+-dans un reseau grand-echelle le protocole ARP peut impacter negativement les performance.
+
+-l'empoisonnement ARP consiste a ce qu'un acteur repond a une requete ARP d'un autre peripherique reseau(ex:passerelle par defaut).
+    Les commutateurs destinés aux grandes entreprises offrent des méthodes de limitation de ce risque appelées inspection ARP dynamique.
+
+
+
+-------
+9.3
+-------
+
+-decouverte de voisins/neighbor descovery(ND/NDP).
+     fournit des services de résolution d'adresses, de détection de routeur et de redirection pour IPv6 à l'aide d'ICMPv6.
+
+-IPv6 ND est défini dans l'IETF RFC 4861.
+
+-les message ICMPv6 utilisees par NDP:
+    ~Message de sollicitation de voisin.
+    ~Message d'annonce de voisin.
+    ~Message de sollicitation de routeur (RS).
+    ~Message d'annonce de routeur (RA).
+    ~Redirection du message: message de redirection qui est utilisé pour une meilleure sélection de tronçon suivant.
+
+-Les messages de sollicitation des voisins et d'annonce des voisins sont utilisés pour la messagerie périphérique à périphérique(prepherique = hote/routeur).
+
+
+-Les messages de sollicitation et d'annonce de routeur sont destinés à la messagerie entre les périphériques et les routeurs.
+    la découverte de routeur est utilisée pour l'allocation d'adresses dynamique et la configuration automatique d'adresses sans état (SLAAC).
+
+-Les messages de sollicitation de voisin ICMPv6 sont envoyés à l'aide d'adresses de multidiffusion Ethernet et IPv6 spéciales.
+    permet à la carte réseau de déterminer si le message de sollicitation est propre à lui-même sans avoir à l'envoyer au système d'exploitation pour traitement.
+
+-
+
+
+
+
+

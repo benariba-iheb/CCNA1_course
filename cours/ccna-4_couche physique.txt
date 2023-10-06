@@ -1,0 +1,124 @@
+----------
+4.2
+----------
+
+-les services et protocole de la suite tcp/ip sont definies par (internet engeneering TF (IETF)).
+
+-les organismes responsables sur  les normes de la couche physique (relatives au matériel, aux supports, au codage et à la signalisation):
+    ~ISO (International Standards Organization).
+    ~IEEE (Institute of Electrical and Electronics Engineers).
+    ~TIA/EIA (Telecommunications Industry Association/Electronic Industries Association).
+
+-Les normes de couche physique couvrent ces trois domaines:
+    ~Composants physiques: l'ensemble de ports, perepherique electroniques et connecteurs respectants les normes associes a la couche physique.
+    ~codage: les methodes qui coveritssent un flux de bits en un code predefini connue par le l'expiditeur et le recepteur.
+    ~Signalisation: c'est la methode de representation des bits (changement de niv du signale electrique).
+
+TERMINOLOGIE:
+    ~BANDE PASSANTE(capacitee de transmission):  c'est la quantité d'informations pouvant circuler d'un emplacement à un autre pendant une période donnée.
+    ~LATENCE:  le temps necessaire au donnes pour arriver a leur destination.
+    ~DEBITS(quantitee de donnees transmisent/s):  le débit est la mesure du transfert de bits sur le support pendant une période donnée.
+    ~DEBIT APPLICATIF:  Le débit applicatif correspond au débit moins la surcharge de trafic (debit - tcp/ip_headers = debit applicatif).
+
+
+
+--------
+4.3
+--------
+
+-les supports en cuivre sont : -bon marchee.
+                               -facile a installer.
+                               -bon conducteur de courant electrique.
+
+-ils sont limites par: -la distance.
+                       -interferance du signale.
+
+-les interferances:
+    ~Interférences électromagnétiques (EMI) ou interférences radioélectriques (RFI):les signaux électromagnétiques et radioélectriques peuvent
+    déformer et détériorer les signaux de données transportés par les supports en cuivre.
+    ~Diaphonie:la diaphonie est la perturbation causée par les champs électriques ou magnétiques d'un signal dans un câble sur le signal
+    traversant le câble adjacent.
+-solutions:
+    ~pour contrer les perturbation electromagnetique on entour les cables d'un blindage metallique et une prise de terre.
+    ~pour contrer la diaphonie on utilisent des paires de fils opposes torsades.
+
+-pour limiter la diaphonie:
+  ~annulation: en rapprochant les fils du cable, les champs magnetiques de ces derniers s'annulent.
+  ~variation de nombre de torsades: chaque fil du cable a un nombre differant de torsades pour renforcer l'annulation. 
+
+-les types de cables en cuivre:
+    ~UTP(cable torsadees non blidees): se compose de quatre paires de fils à code couleur qui ont été torsadés, puis placés dans une gaine en plastique.
+    ~STP(cable torsadees blidees): mm chose que UTP + un blindage contre les interferences electromagnetique.  
+    ~cable coaxiale: Un conducteur en cuivre puis un isolant plastique puis une feuille metallique pour protege contre les interferance puis une gaine plastique.
+
+
+
+---------
+4.4
+---------
+
+
+-les normes de cablages sont etablies par:
+   ~Telecommunications Industry Association (TIA).
+   ~Electronic Industries Association (EIA).
+
+-les caracteristiques electrique du cablage sont definies par:
+   ~IEEE (Institute of Electrical and Electronics Engineers).
+
+-les categories de cables UTP:
+   ~cat.3: utilisée à l'origine pour la communication vocale sur des lignes vocales.
+   ~cat.5(100 Mbps)-cat.5e(1000 Mbps): utilisées pour la transmission des données.
+   ~cat.6(10gbps): dispose d'un séparateur supplémentaire entre chaque paire de fils(STP) pour supporter des vitesses plus élevées.
+   ~cat.7/cat.8: prennent en charge des debits superrieur.
+
+-les types de cables:
+   ~Câble Ethernet droit(T568A ou T568B aux deux extremites): utilisee pour connecte deux appareils differant. -----|
+                                                                                                                    |-->les NIC modernes supportent le auto-MDIX(detecte et s'adapte au type de cable utilise).
+   ~Câble Ethernet croisé(un cote:T568A et l'autre:T568B): utilisee pour connecter deux appareils simillaires.------|
+   ~câble rollover: propriétaire de Cisco. Il est utilisé pour connecter un ordinateur a un appareille reseau avec le port console.
+
+# T568A: B.V - V - B.O _ _ O _ _
+# T568B: B.O - O - B.V _ _ V _ _
+
+
+--------
+4.5
+--------
+
+-fibre optique: 
+   ~longues distances de transmission avec une bande passante plus large.
+   ~ moins d'atténuation et sont entièrement protégés des perturbations électromagnétiques et radioélectriques. 
+     
+-modes de fibre:
+   ~SMF(single-mode fiber):fibre optique monomode. se compose d'un très petit noyau et utilise une technologie laser coûteuse[utilisee pour les langues distances]. --->colorree en jaune
+   ~MMF(multi-mode fiber)[<500m]:fibre optique multimode.se compose d'un noyau plus important et utilise des émetteurs (LED)[ la lumière entre dans la fibre sous différents angles]. ----coloree en orange
+
+-types de connecteurs fibre:
+   ~ST: l'un des premiers types, offre un veroullage securise.
+   ~SC (connecteur carre): le plus utilise dans les LAN [compatible avec les 2 modes].
+   ~LC (simplex/unidirectionnel): version petite de SC (avec un seul connecteur), repandue dans les LAN.
+   ~LC (duplex/bidirectionnel):version petite de SC.
+
+
+-------
+4.6
+-------
+
+-les limitations de cnxn sans fil:
+   ~zone de couverture limitee.
+   ~interférences et perturbation.
+   ~sécurité deminuee.
+   ~support partagé:le sans fil fonctionne en mode semi-duplex(un seul périphérique peut envoyer ou recevoir des données à la fois).
+
+-les normes de communications sans fil couvrent à la fois les couches liaison de données et physique et comprennet:
+   ~le codage des données en signal radio.
+   ~la fréquence et la puissance de transmission.
+   ~les besoins relatifs au décodage des signaux et à la réception.
+   ~la conception et la mise en service des antennes.
+
+-les normes sans fil:
+   ~Wi-Fi (IEEE 802.11): utilise la contention CSMA/CA.[WLAN]
+   ~Bluetooth (IEEE 802.15): peut communiquer jusqu'a 100m [WPAN(w. personal area net.)]
+   ~WiMAX (IEEE 802:16): utilise une topologie point-à-multipoint pour fournir un accès à large bande sans fil.
+   ~Zigbee (IEEE 802.15.4): utilise pour les communication faible debit et faible puissance(on la trouve dans les appareils IoT).
+ 

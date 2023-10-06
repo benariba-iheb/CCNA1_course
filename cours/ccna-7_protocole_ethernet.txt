@@ -1,0 +1,105 @@
+---------
+7.1:
+---------
+
+-ethernet(inclut la couche liaison de donnees et la couche physique):
+       ~sous-couche LLC(802.2).
+       ~sous-couche MAC + couche physique [ethernet(802.3), wlan(802.11), wpan(802.15)].
+
+-la taille d'une trame est: 64oct.< trame <1518oct. (le preambule n'est pas inclut)
+     
+-les trame < 64 sont appelees: fragment de trame.
+
+-les trame > 1518 sont appelees: trames jumbo.
+
+-ces deux types de trames sont abondonnees par le peripherique recepteur et sont traites comme non valide.
+
+-les champs de la couche liaison de donnees:
+   
+    ~preambule(7o-ctets):attirers l'attention du recepteur.
+
+    ~SFD(1octets):synchronisation entre les deux peripherique.
+
+    ~@MAC dest.(6-octets):ID. de la NIC destination.
+    ~@MAC src.(6-octets):ID. de la NIC source.
+
+    ~type/longeueur/ethertype(2octets):ID du protocole de la couche sup.
+
+    ~donnees(46<donnees<1500):si le paquet est trop petit des bits de remplissage seront utilises.
+
+    ~sequance de controle de trame/FCS(4-octets):detection d'erreurs(avec le CRC).
+
+
+-----------
+7.2
+-----------
+
+-les @MAC: ~48-bits de langueur.
+           ~12 chiffres hexa.
+           ~6-octets de langueur.
+
+-identifiant unique de l'organisation(OUI):ce sont les 3-octets dans l'@MAC qui identifie le founisseur.
+
+-C'est l'IEEE qui donne l'identifiant unique de l'organisation(OUI).
+
+-le reste de l'@MAC est une valeur unique donnee par le fournisseur.
+
+-lors de son allumage la NIC transmais l@MAC de sa memoire morte a sa memoire vive.
+
+-si l'@MAC dest. d'une trame recue ne correspond pas a l'@MAC de la carte reseau, la trame serra ignorrees.
+
+
+-protocole ARP: c'est un protocole utilise pour determiner l'@MAC d'un hote qui a l'@IP dest. du le paquets. le protocole arp ne comporte pas de paquet IPv4, 
+    mais le msg est envoyer en tant que diffusion ethernet.
+
+-le protocole neighbor discovery a le meme principe et est utilise pour le protocole IPv6.
+
+-les @MAC multi-diffusion sont:
+          ~01-00-5E(IPv4).
+          ~33-33(IPv6).
+les trames multi-diffusion sont innonde par tous les port du switch(sauf s'il est configure).
+les trames ne sont pas transfere par un routeur(sauf s'il est configure).
+
+-les @IP multi-diffusion:
+          ~224.0.0.0-239.255.255.255 (IPv4).
+          ~FF00::/8 (IPv6).
+
+-commande:
+ switch#show arp    ----->[affiche la MAP des @MAC et @IP correspondant]
+ switch# show mac address-table   ----->[affiche la table des @MAC]
+ 
+
+------
+7.3
+------
+
+-le commutateur cree sa table d'@MAC dynamiquement en examinant l'@MAC src des trames recues sur un port
+    (Si l'adresse MAC source n'existe pas, elle est ajoutée à la table , tout comme le numéro du port d'entrée, si elle existe le comutateur reinitialise le compteurd'obsolescence).
+
+-le commutateur cherche l'@MAC dst dans ca table d'adressage
+    (si l'@MAC dst s'y trouve la trame serra transfere par le port specifier, sinon elle serra transfere sur tous les ports de la trame(unicast inconnu) ).
+ 
+-sur un commutateur plsr @MAC peuvent etre associes a un seul port (si il est connecte a un autre switch).
+
+---------
+7.4
+--------
+
+-les methodes utilisees par les commutateurs:
+     ~La commutation par stockage et retransmission (store-and-forward):  cette methode verifie si les paquets sont erronees avant de les transmettre en calculant le CRC.(necessaire pour l'analyse de la qualite de service QoS)
+     
+     ~La commutation cut-through:  cette methode a besoin au minimum de l'@ de destinantion de la trame avant de la transmettre.
+                                   -commutation fast-forward:offre une latence faible (mesurer du 1er bit recue --->1er bit envoyer) mais ne garantie pas la fiabilite des donnees.
+
+     ~La commutation Fragment-free: le commutateur stock les 64 premiers octets avant la transmission (considérée comme un compromis entre la commutation store-and-forward et la commutation fast-forward.).
+
+
+- techniques de mise en tompon utilisees par les commutateurs pour stocker des trames avant leur transmission(utilise lorsque le port dest est opccupe par la congestion):
+         ~Mémoire axée sur les ports:  les trames sont stocker dans des fils d'attente liees a des ports(il est possible qu'une seul trame ralentisse la transmission de tt les autres trames en cas de congestion au niv du port).
+         ~Mémoire partagée: tt les trames sont deposees dans un seul tompon partage par tt les commutateurs (la memoire tompon requise pour un port est alloue dynamiquement)	
+
+-la negociation automatique est une option qui permet a deux appareil du reseau d'echange des infos sur le debit et le mode duplexe entre eux. 
+
+auto-MDIX: permet de detecter le type de cable connecte aux ports et configurer les interfaces accordement, la plupart des commutateurs sont equipes de cette fonctionalite.
+     ~switch# mdix auto    ------>[active l'auto-mdix]  
+

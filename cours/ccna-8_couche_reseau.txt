@@ -1,0 +1,148 @@
+---------
+8.1
+---------
+
+-critere de communication sur la couche reseau:
+      ~adressage
+      ~encapsulation: est effectuer par la source du pauqet et inclut @IP src. et dest..
+      ~routage:le routage est effectuer par un routeur. les routeurs intermediaires sont appeles troncon.
+      ~desencapsulation:l'hote dst recoit le paquet et verifie l'en-tete IP, si elle correspond a son @ l'en-tete IP est supprimer du paquet.
+
+-les protocoles de couche réseau spécifient la structure et le traitement des paquets utilisés pour transporter les données.
+
+-le processus d'encapsulation par couche permet aux service de se developper et de s'etendre sans affecter d'autre couches.
+
+-les information d'adressage IP restent inchangees lorsqu'elles sont routees(sauf si elles sont traduites par un NAT).
+
+-le protocole IP est concue dans le but de pas surcharger les reseaux(fournit uniquement les infos necessaire a la transmission de donnees).
+
+-le protocole IP n'est pas destine a la suivi et a la gestion du flux(ces fonctions sont executees par les protocole de couche transport). 
+
+-caracteristiques du protocole IP:
+     ~sans connexion: ne requis pas une connexion etablie avec la destination pour l'envoi des donnees. 
+     ~meilleur effort: la livraison de paquets n'est pas garantie.
+     ~independance des supports: le support de transmission n'influe pas sur le protocole IP.
+       cepandant le support de transmission presentent une limitation prise en compte par la couche reseau qui est la taille max d'une PDU(MTU).
+
+-l'unite maximale de transmission est appele MTU et est determine par la couche liaison de donnes.
+
+-parfois un routeur FRAGMENTE un paquet lorsqu'il y a un changement de support de transmission avec un MTU differant
+	(-La fragmentation provoque une latence.  -Les paquets IPv6 ne peuvent pas être fragmentés par un routeur.).
+
+
+-------
+8.2
+-------
+
+-les champs d'un paquets IPv4 (20-octets < l'en-tete IPv4 < 60-octets):
+
+    ~version(+langueur d'en-tete) [1-octet]: contient l'ID de l'IPv4 = 0100.
+    
+    ~services defferencies/diffserv(DS) [1-octet]: deferrencie la priorite de chaque paquet et se compose de deux partie:
+            -point de code des servies diferrencies(DSCP) [6-bits]: se sont les bits les plus significatif du DS. 
+            -notification explicite de congestion(ECN) [2-bits].
+    
+    ~durree de vie(TTL) [1-octet]: une valeur qui limite le nombre de saut et est defenit par la source et decremante a chaque saut(routeur).
+       si la valeur arrive a 0 le routeur rejette le paquet et Renvoie un message de depassement de delai ICMP.
+
+    ~protocole [1-octet]: contient l'ID du protocole de couche sup.
+ 
+    ~somme de controle de l'en-tete [2-octets]: detecte la si l'en-tete est corrompue.
+
+    ~@IP src [4-octets].
+    ~@IP dest [4-octets].
+
+
+-Les champs Longueur d'en-tête Internet (IHL), Longueur totale et Somme de contrôle d'en-tête permettent d'identifier et de valider le paquet.
+
+-le paquet IPv4 utilise les champs Identification, Indicateurs et Décalage du fragment pour remettre dans l'ordre un paquet fragmenté.
+
+-------
+8.3
+-------
+
+-les limites de IPv4:
+    ~epuisement des @IPv4
+    ~manque de connectivite de bout en bout: les @IP publique partagees(en utilisant NAT) pose probleme pour les technologie bout en bout.
+    ~complexite du reseau augmentee: l'utilisation de NAT cree une compelexite supplemantaire dans le reseau(aussi cree une latence).
+
+-l'IPv6 a ete creer par l'IETF.
+
+-les ameliorations de IPv6:
+    ~espace d'adressage accrue (@IPv6 = 128-bit).
+    ~amelioration du traitement de paquets: l'en-tete IPv6 a ete simplifie avec moins de champs.
+    ~elimination du NAT.
+
+-les champs IPv6 (l'en-tete IPv6 = 40-octets):
+
+    ~version [4-bits]: contient la valeur 0110 qui indique IPv6.
+
+    ~classe de traffic [1-octet]: equivalant a DS.
+    
+    ~etiquette de flux [20-bits]: indique le type de traitement par les routeurs.
+
+    ~langueur de la charge utile [2-octets]: indique la langueur de la portion de donnees(n'inclut pas la l'en-tete).
+
+    ~en-tete suivant [1-octet]: equivalant au champ protocole dans l'IPv4.
+
+    ~limite de saut [1-octet]: equivalant au champ TTL.
+    
+    ~@IPv6 src. [16-octets].
+    ~@IPv6 dest. [16-octets]. 
+  
+-un paquet IPv6 peut contenir des en-tetes d'extension(fournit des informations facultatives de couche reseau). 
+    ils sont places entre l'en-tete IPv6 et les donnees utiles, et sont utilise pour :-la fragmentation.
+     										      -la securite.
+
+-les paquets peuvent etre envoyer a:
+    ~soi-meme: avec (l'@IPv4 = 127.0.0.1) et (l'@IPv6 = ::1) appelee interface de bouclage.
+    ~hote locale: un hote qui se trouve sur le meme reseau.
+    ~hote distant: hote qui se trouve sur un reseau distant.
+
+-C'est l'appareil qui envoie les donnees qui determine si l'hote-destination est un hote locale ou distant.
+    ~dans IPv4: le perepherique source utilise le masque sous-reseau et l'@IPv4 pour faire cette determination.
+    ~dans IPv6: le routeur locale annonce l'@ reseau locale(prefixe) aux peripherique du reseau.
+
+-la passerellle est le dispositif(routeur/switch-couche-3) responsable sur l'acheminement du traffic vers d'autre reseaux.
+    ~possede une @IP locale dans le meme reseau.
+    ~accepte les donnees locaux et peut les transferer hors reseau-local.
+    ~achemine le traffic vers d'autre reseaux.
+
+-Une passerelle par défaut est requise pour envoyer du trafic en dehors du réseau local.
+
+-commande:
+ c:\user>netstat -r     -----|             -la liste des interfaces(@MAC + num_interface).
+                             |--> affiche: -tableau des routes IPv4.     
+ c:\user>route print    -----|             -tableau des routes IPv6.
+
+
+------
+8.5
+------
+
+-entrees d'iteneraire/de route: la liste de toutes les @-reseaux-connues(prefixe) et leur interfaces associees.
+
+-les types d'entres dans la table de routage:
+     ~Réseaux directement connectés: se sont les reseaux a qui une interface du routeur est directement liee, a une @IP et est active.
+     ~reseaux distants: des entrees d'itineraire connectees a un autre routeur,
+         ces entrees sont soit manuellement configurer sur les autres routeurs soit apris par des protocoles de routage dynamique.
+     ~route par default/passerelle de dernier recours: c'est l'itineraire utilise lorsqu'il n'y a pas de meilleure correspondance dans la table de routage.
+
+-les routes statiques sont des entrees d'itineraire configurees manuellement.
+
+-la route statique n'est pas automatiquement mise à jour et doit être reconfigurée manuellement en cas de modification de la topologie reseau.
+
+-caracteristique du routage statique:
+    ~configuree manuellement.
+    ~ne s'adapte pas aux modification de la topologie reseau.
+    ~approprie pour les petit reseaux.
+    ~utilisee avec un protocole de routage dynamique pour configurer une route par defaut.
+
+-le routage dynamique permet aux routeurs de partager les informations de routage avec d'autres routeurs sans l'intervention d'un admin
+    il prend en compte les modification de la topologie.
+
+-le protocole de routage dynamique se deroule automatiquement comme suit:
+    ~decouvrir les reseaux distants.
+    ~assurer l'actualisation des informations de routage.
+    ~choisir le meilleur chemin vers la distination.
+    ~chercher a trouver un nouveau meilleur chemin.

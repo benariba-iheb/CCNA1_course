@@ -1,0 +1,128 @@
+------
+15.1
+------
+
+-la couche application sert d'interface entre les app utilisateur et le reseau sous-jacent(cette couche echange les donnees entre les programmes).
+
+-la couche application du modele TCP/IP regroupe les 3 couche du modele OSI:
+    ~application: contient des protocoles {DNS, HTTP, SMTP,POP, DHCP, FTP, IMAP}.
+
+    ~presentation({MKV, MPEG, JPEG, GIF,PNG} elle a trois fonctions:-mettre en forme les donnees pour qu'elle soit compatible pour la reception.
+                                          -compresser les donnees de sorte a ce qu'elle soit decompressable par la destination.
+                           		  -chiffrage de donnees pour la securite et le dechiffrage a la reception. 
+   
+    ~session:elle cree et gere les dialogues entre les application source et destination.
+             elle traite l'echange des informations pour commencer et maintenir un dialogue et redemarrer les sessions interrompue.
+
+
+-dans le modele client/serveur le telechargement de donnees par le client depuis un serveur est dit descendant et le telechargement des donnees par un servuer depuis un client est dit ascendent.
+
+-dans le modele peer-top-peer(P2P) les donnees sont accessible a partir d'un peripherique homologue(peer) sans l'intervention d'un serveur dedie.
+     ~il y a deux parties du modele P2P:-partie reseau: qd plsr appareils sont connectes via un reseau et partagent les ressources sans disposer de serveur didie. 
+		                        
+					-partie application: permet a un peripherique d'agir a la fois en tant que serveur et client, ces applications necessite que les peripheriques finals fournisse une interface utilisateur et execute un service en arriere plan.
+ 						[bitTorrent, freenet, Direct connect] 
+
+
+-le protocole gnutella permet aux utilisateurs de localiser les ressources partagees par d'autre homologues gnutella et de partger des fichiers avec d'autre personnes.
+    ~les utilisateurs utilisent un fichier appele torrent pour localiser d'autre utilisateurs qui possedent des parties dont ils ont besoin.
+
+
+------
+14.3
+------
+
+-la communication HTTP:
+    ~le navigateur interprete les partie de l'adresse URL { [http]://[www.cisco.com]/[index.html] }
+                                                        { protocole / nom-serveur  / nom fichier }
+    ~le navigateur verifie avec un serveur DNS l'@ du serveur. et initie une requete HTTP a un serveur en envoyant une requete GET au serveur.
+    ~le serveur repond a la demande en envoyant le code HTML de la page demandee. 
+    ~le navigateur dechiffre le code HTML et l'affiche.
+
+-le protocole HTTP utilise generalement 3types de messages:   
+    ~GET: une demande du client au serveur pour obtenir des donnees. 
+    ~POST: upload les donnees depuis un client vers le serveur(plus securise que PUT), utilise generalement dans les formulaires.
+    ~PUT:    //        //       //        //     //     //    , tel qu'une image.
+
+-le protocole HTTPS est similaire au protocole HTTP avec l'adition du protocole SSL(secure socket layer) pour la securisation des conversations.
+
+
+-le protocole SMTP exige un en-tete et un corps de message.
+    ~le corps peut contenir n'importe quelle qtt de texte.
+    ~l'en-tete devrait contenir une adresse de messagerie de destinataire et une @ d'expiditeur correctement mise en forme.
+    
+
+
+-le POP est utilise par une application pour reccuperer un message electronique a partir d'un serveur.(le courrier serra supprime du serveur apres que le client recoit une copie.)
+
+-les etapes d'une communication DNS:
+    ~le client saisie un FQDN(fully qualified domain name) dans son application de navigation.
+    ~une requete DNS est envoyee au serveur DNS designe pour le client.
+    ~le serveur DNS cherche l'@IP du FQDN.
+    ~la reponse a la requete DNS est renvoyee au client avec @IP du FQDN.
+    ~le client utilise l'@IP recue pour effectuer des requetes au serveur.
+
+-un serveur DNS stocke differents types d'enregistrement, de ressource utilises pour resoudre des noms.
+
+-les types d'enregistrement du serveur DNS:
+    ~A: une adresse IPv4 de peripherique final.
+    ~NS: un serveur de noms autorise.
+    ~AAAA(quadriple A): une adresse IPv6 de peripherique terminal.
+    ~MX: un enregistrement d'echange de courrier electronique.
+
+-le protocole DNS utilise un systeme hierarchique pour une base de donnees assurant la resolution des noms.
+    ~la structure des serveurs est devise en petite zone gerables.
+    ~chaque serveur maitient une base de donnees specifique et n'est responsable que du mappage nom-a-IP de cette petite zone.
+    ~si le nom recherche n'appartient pas a la base de donnees du serveur DNS(la zone du serveur), le serveur vat transferer la requete a un autre serveur DNS se trouvant dans la zone correcte.
+
+les different domaines de premiers niveau:
+    ~.com: entreprise ou secteur d'activite.
+    ~.org: organisme a but non lucratif.
+    ~.au: australie.
+    ~.co: colombie.
+
+
+-le protocole DHCP: distribue des @IP aux peripherique du reseau de son pool d'adresse pour un bail de temps
+    ~lors de la connexion d'un peripherique IPv4 il diffuse un message de detection dHCP-DISCOVER pour identifier le serveur.
+    ~le serveur repond par un message DHCP-OFFER qui offre un bail au client.
+    ~le client peut recevoire plsr DHCP-OFFERs. il choisis un d'entre eux et envoie un message DHCP-REQUEST au serveur choisi.
+    ~si le serveur contient des @ dans son pool, il envoie un message d'accuse de reception DHCP-ACK confirmant au client que le bail est conclu.
+    ~si l'offre n'est plus valide, le serveur repond par un message d'accuse de reception negatif DHCP-NAK et le processus de selection doit recommencer avec un nouveau DHCP-DISCOVER.
+
+
+-les messages du protocole DHCPv6:
+    ~SOLICIT.
+    ~ADVERTISE.
+    ~INFORMATION REQUEST.
+    ~INFORMATION REPLY.
+
+
+
+------
+15.5
+------
+
+-la connexion a un serveur FTP s'execute en trois etapes:
+    ~connexion de controle: le client etablit une connexion au serveur pour controler le traffic.(le client utilise le port 21)
+                            le traffic se compose de commandes client et de reponses serveur.
+
+    ~connexion de donnees: le client etablit une deuxieme connexion pour le traffic de donnees.(le client utilise le port 20)
+                           cette connexion est cree a chaque fois qu'il y a des donnees a transferer.
+
+    ~DATA transfer: le serveur transfers les donnees au client.
+                    le transfert de fichiers peut s'effectuer dans les deux sens.(le client peut extraire(telecharger) du serveur ou stocker dans le serveur.
+
+
+-le protocole SMB(server message block) est un protocole de partage de fichiers client/serveur pour decrire les ressources reseau partagees(repertoire, fichiers, imprimantes, ports serie).
+    le SMB utilise un format commun:
+                                    -en-tete de taille (fixe).
+                                    -parametre et composant de donnees(variable).
+
+-les fomction de SMB:
+    ~demarrer/finir et authentifier des sessions. 
+    ~controle l'acces aux fichiers et aux imprimantes.
+    ~permettre aux application d'envoyer/recevoire des messages vers/depuis un autre peripherique.
+
+-le SMB contrairement a FTP etablie une connexion long terme aux serveurs. une fois connecte l'utilisateur peut acceder aux ressources residant sur le serveur.
+
+-les systeme unix utilisent la version SAMBA.
